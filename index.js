@@ -1,17 +1,26 @@
+let docked = false;
+let dock = false;
+function onError(error) {
+  console.error(`Error: ${error}`);
+}
 
-  function onCreated(tab) {
-    console.log(`Created new tab: ${tab.id}`)
+function sendMessageToTabs(tabs) {
+  for (let tab of tabs) {
+    browser.tabs.sendMessage(
+      tab.id,
+      {id: tab.id,dock:true}
+    ).then((response) => {
+      docked = response.docked;
+    }).catch(onError);
   }
-  
-  function onError(error) {
-    console.log(`Error: ${error}`);
-  }
-  
+}
+
+
   browser.browserAction.onClicked.addListener(function() {
-    let creating = browser.tabs.create({
-      url:"index.html"
-    });
-    
-    creating.then(onCreated, onError);
+    console.log("icon clicked!!")
+    browser.tabs.query({
+      currentWindow: true,
+      active: true
+    }).then(sendMessageToTabs).catch(onError);
   });
   

@@ -1,11 +1,10 @@
 {
-    "name":"WriteMySpeech",
+    "name":"Take-Screenshot",
     "version":"1.0.0",
-    "description":"This Extension helps you commiting your speech to text and writes to the selected text box on your current web page .",
+    "description":"This Extension helps you to take screen shots",
     "browser_action":{
         "browser_style": true,
-        
-        "default_title": "Write My Speech"
+        "default_title": "Take screenshot"
     },
     "permissions":["activeTab","webNavigation","webRequest","devtools","menus", "contextMenus","downloads", "downloads.open"],
 
@@ -13,7 +12,13 @@
    
       "background":{
           "scripts":["index.js"]
-      }
+      },
+      "content_scripts": [
+        {
+          "matches": ["<all_urls>"],
+          "js": ["main.js"]
+        }
+      ]
 
     
 }
