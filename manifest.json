@@ -1,0 +1,19 @@
+{
+    "name":"WriteMySpeech",
+    "version":"1.0.0",
+    "description":"This Extension helps you commiting your speech to text and writes to the selected text box on your current web page .",
+    "browser_action":{
+        "browser_style": true,
+        
+        "default_title": "Write My Speech"
+    },
+    "permissions":["activeTab","webNavigation","webRequest","devtools","menus", "contextMenus","downloads", "downloads.open"],
+
+    "manifest_version": 2,
+   
+      "background":{
+          "scripts":["index.js"]
+      }
+
+    
+}

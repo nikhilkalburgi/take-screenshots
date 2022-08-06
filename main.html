@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src='https://unpkg.com/tesseract.js@v2.1.4/dist/tesseract.min.js'></script>
+	 <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+        <div class="contain">
+              <video id="video" autoplay onplay="videoOnLoad(this)"></video>
+              <canvas class="canvas" id="cv1"></canvas>
+                <input type="checkbox" id="showArea" name="showArea" checked hidden>
+         </div>
+        <div style="width:100%;position: absolute;bottom: 0;text-align: center;padding:10px">
+          <a id="my_img" class="btn btn-primary" href="#" download="file.png">Download</a>
+        </div>
+  <script src="main.js"></script>
+</body>
+</html>
