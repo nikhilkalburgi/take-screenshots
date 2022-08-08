@@ -52,23 +52,23 @@ toolbar.style.bottom = "0";
 toolbar.style.left = "50%";
 toolbar.style.transform = "translateX(-50%)";
 toolbar.style.width = "35%";
-toolbar.style.height = "60px";
+toolbar.style.height = "40px";
 toolbar.style.borderStartStartRadius = "10px";
 toolbar.style.borderStartEndRadius = "10px";
 toolbar.style.boxShadow = "0px 0px 5px rgb(125, 122, 122)";
 toolbar.style.padding = "10px";
 toolbar.style.justifyContent = "space-around";
-toolbar.style.zIndex = "3";
+toolbar.style.zIndex = "2147483647";
 toolbar.style.backgroundColor="white";
 
 let  canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let ctx = canvas.getContext('2d');
-canvas.style.border = "solid";
 canvas.style.position = "fixed";
 canvas.style.top = "0px";
 canvas.style.left = "0px";
+canvas.style.zIndex = "2147483646";
 
 var startX = 0;
 var startY = 0;
@@ -90,29 +90,49 @@ var cv2 = document.createElement('canvas');
   var polygonClip = document.createElement("button");
   polygonClip.style.border = "0.1px solid #918c8c";
   var polygonClipToggle = false;
-  polygonClip.innerHTML = '<img src="'+browser.runtime.getURL('pen.png')+'"/>';
+  var image = new Image();
+  image.src = browser.runtime.getURL('pen.png');
+  polygonClip.appendChild(image);
   polygonClip.style.width = "40px";
 
   var rectClip = document.createElement("button");
   rectClip.style.border = "0.1px solid #918c8c"
   var rectClipToggle = false;
-  rectClip.innerHTML = '<img src="'+browser.runtime.getURL('rect.png')+'" width="90%" style="padding-top:5px;padding-left:3px"/>'
+  image = new Image();
+  image.src = browser.runtime.getURL('rect.png');
+  image.style.width = "90%";
+  image.style.paddingTop = "5px";
+  image.style.paddingLeft = "3px";
+  rectClip.appendChild(image);
   rectClip.style.width = "40px";
 
   var circleClip = document.createElement("button");
   circleClip.style.border = "0.1px solid #918c8c"
   var circleClipToggle = false;
-  circleClip.innerHTML = '<img src="'+browser.runtime.getURL('circle.png')+'" width="80%" style="padding-top:5px;padding-left:3px"/>';
+  image = new Image();
+  image.src = browser.runtime.getURL('circle.png');
+  image.style.width = "80%";
+  image.style.paddingTop = "5px";
+  image.style.paddingLeft = "3px";
+  circleClip.appendChild(image);
   circleClip.style.width = "40px";
 
   var download = document.createElement("button");
   download.style.border = "0.1px solid #918c8c"
-  download.innerHTML = '<img src="'+browser.runtime.getURL('download.png')+'" width="60%" style="padding-top:5px"/>';
+  image = new Image();
+  image.src = browser.runtime.getURL('download.png');
+  image.style.width = "60%";
+  image.style.paddingTop = "5px";
+  download.appendChild(image);
   download.style.width = "40px";
 
   var closeBtn = document.createElement("button");
-  closeBtn.style.border = "0.1px solid #918c8c"
-  closeBtn.innerHTML = '<img src="'+browser.runtime.getURL('close.png')+'" style="padding-left:2px;padding-top:2px"/>';
+  closeBtn.style.border = "0.1px solid #918c8c";
+  image = new Image();
+  image.src = browser.runtime.getURL('close.png');
+  image.style.paddingTop = "2px";
+  image.style.paddingLeft = "2px";
+  closeBtn.appendChild(image);
   closeBtn.style.width = "40px";
 
 
@@ -473,7 +493,8 @@ function removeBtn(){
 
 
 function getImage(){
-
+    ctx.clearRect(0,0,canvas.width,canvas,height);
+    ctx.beginPath();
 
     cv2.width = canvas.width ;
     cv2.height = canvas.height;

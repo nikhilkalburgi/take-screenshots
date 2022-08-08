@@ -4,7 +4,8 @@
     "description":"This Extension helps you to take screen shots",
     "browser_action":{
         "browser_style": true,
-        "default_title": "Take screenshot"
+        "default_title": "Take screenshot",
+        "default_icon":"take-screenshot-icon.png"
     },
     "permissions":["activeTab","webNavigation","webRequest","devtools","menus", "contextMenus","downloads", "downloads.open","<all_urls>"],
 
