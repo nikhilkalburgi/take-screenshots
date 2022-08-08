@@ -1,4 +1,3 @@
-let docked = false;
 let dock = false;
 function onError(error) {
   console.error(`Error: ${error}`);
@@ -8,16 +7,21 @@ function sendMessageToTabs(tabs) {
   for (let tab of tabs) {
     browser.tabs.sendMessage(
       tab.id,
-      {id: tab.id,dock:true}
+      {id: tab.id,dock:dock}
     ).then((response) => {
-      docked = response.docked;
+
     }).catch(onError);
   }
 }
 
+browser.runtime.onMessage.addListener((request,sender,response) => {
+  dock = request.dock;
+  response();
+  })
+
 
   browser.browserAction.onClicked.addListener(function() {
-    console.log("icon clicked!!")
+    dock = !dock;
     browser.tabs.query({
       currentWindow: true,
       active: true

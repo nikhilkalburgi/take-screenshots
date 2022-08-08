@@ -6,7 +6,7 @@
         "browser_style": true,
         "default_title": "Take screenshot"
     },
-    "permissions":["activeTab","webNavigation","webRequest","devtools","menus", "contextMenus","downloads", "downloads.open"],
+    "permissions":["activeTab","webNavigation","webRequest","devtools","menus", "contextMenus","downloads", "downloads.open","<all_urls>"],
 
     "manifest_version": 2,
    
@@ -15,9 +15,12 @@
       },
       "content_scripts": [
         {
-          "matches": ["<all_urls>"],
+          "matches": ["<all_urls>","https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/query"],
           "js": ["main.js"]
         }
+      ],
+      "web_accessible_resources":[
+        "*.png"
       ]
 
     
