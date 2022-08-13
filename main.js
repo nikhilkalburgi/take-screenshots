@@ -12,7 +12,7 @@ viewFullScreen.style.backgroundColor = "red";
 viewFullScreen.style.color = "white";
 viewFullScreen.style.fontSize = "2vh";
 viewFullScreen.innerHTML = "View Full Screen";
-viewFullScreen.style.zIndex = "2";
+viewFullScreen.style.zIndex = "2147483646";
 viewFullScreen.style.cursor = "pointer";
 viewFullScreen.style.boxShadow = "0px 0px 10px black";
 viewFullScreen.onmousedown = ()=>{
@@ -35,7 +35,7 @@ displayScreen.style.backgroundColor = "red";
 displayScreen.style.color = "white";
 displayScreen.style.fontSize = "2vh";
 displayScreen.innerHTML = "Access Screen"; 
-displayScreen.style.zIndex = "2";
+displayScreen.style.zIndex = "2147483646";
 displayScreen.style.cursor = "pointer";
 displayScreen.style.boxShadow = "0px 0px 10px black";
 displayScreen.onmousedown = ()=>{
@@ -52,7 +52,6 @@ toolbar.style.bottom = "0";
 toolbar.style.left = "50%";
 toolbar.style.transform = "translateX(-50%)";
 toolbar.style.width = "35%";
-toolbar.style.height = "40px";
 toolbar.style.borderStartStartRadius = "10px";
 toolbar.style.borderStartEndRadius = "10px";
 toolbar.style.boxShadow = "0px 0px 5px rgb(125, 122, 122)";
@@ -60,6 +59,7 @@ toolbar.style.padding = "10px";
 toolbar.style.justifyContent = "space-around";
 toolbar.style.zIndex = "2147483647";
 toolbar.style.backgroundColor="white";
+toolbar.style.transition = "all 0.3s";
 
 let  canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
@@ -69,6 +69,7 @@ canvas.style.position = "fixed";
 canvas.style.top = "0px";
 canvas.style.left = "0px";
 canvas.style.zIndex = "2147483646";
+canvas.style.cursor = "crosshair";
 
 var startX = 0;
 var startY = 0;
@@ -79,12 +80,12 @@ var existingLines = [];
 var hasLoaded = true;
 
 var cv2 = document.createElement('canvas');
-  var ctx2 = cv2.getContext('2d');
-  cv2.style.position = "fixed";
-  cv2.style.top = "0px";
-  cv2.style.left = "0px";
-  cv2.style.display = "none";
-  
+var ctx2 = cv2.getContext('2d');
+cv2.style.position = "fixed";
+cv2.style.top = "0px";
+cv2.style.left = "0px";
+cv2.style.display = "none";
+
   let firstClick = true;
   
   var polygonClip = document.createElement("button");
@@ -94,17 +95,21 @@ var cv2 = document.createElement('canvas');
   image.src = browser.runtime.getURL('pen.png');
   polygonClip.appendChild(image);
   polygonClip.style.width = "40px";
+  polygonClip.style.padding = "5px";
+  polygonClip.style.cursor = "pointer";
 
   var rectClip = document.createElement("button");
   rectClip.style.border = "0.1px solid #918c8c"
   var rectClipToggle = false;
   image = new Image();
   image.src = browser.runtime.getURL('rect.png');
-  image.style.width = "90%";
+  image.style.width = "80%";
   image.style.paddingTop = "5px";
   image.style.paddingLeft = "3px";
   rectClip.appendChild(image);
   rectClip.style.width = "40px";
+  rectClip.style.padding = "5px";
+  rectClip.style.cursor = "pointer";
 
   var circleClip = document.createElement("button");
   circleClip.style.border = "0.1px solid #918c8c"
@@ -116,6 +121,8 @@ var cv2 = document.createElement('canvas');
   image.style.paddingLeft = "3px";
   circleClip.appendChild(image);
   circleClip.style.width = "40px";
+  circleClip.style.padding = "5px";
+  circleClip.style.cursor = "pointer";
 
   var download = document.createElement("button");
   download.style.border = "0.1px solid #918c8c"
@@ -125,6 +132,8 @@ var cv2 = document.createElement('canvas');
   image.style.paddingTop = "5px";
   download.appendChild(image);
   download.style.width = "40px";
+  download.style.padding = "5px";
+  download.style.cursor = "pointer";
 
   var closeBtn = document.createElement("button");
   closeBtn.style.border = "0.1px solid #918c8c";
@@ -134,7 +143,8 @@ var cv2 = document.createElement('canvas');
   image.style.paddingLeft = "2px";
   closeBtn.appendChild(image);
   closeBtn.style.width = "40px";
-
+  closeBtn.style.padding = "5px";
+  closeBtn.style.cursor = "pointer";
 
 var downloadLink = document.createElement('a');
 downloadLink.innerHTML = "DOWNLOAD";
@@ -143,6 +153,9 @@ downloadLink.download = "screenshot.png";
 document.body.appendChild(downloadLink);
 downloadLink = Array.from(document.getElementsByTagName('a'))[Array.from(document.getElementsByTagName('a')).length-1]
 var imageData;
+circleClip.style.backgroundColor = "white";
+rectClip.style.backgroundColor = "white";
+polygonClip.style.backgroundColor = "white";
 
 
 var displayMediaOptions = {
@@ -186,7 +199,7 @@ function draw() {
     ctx.moveTo(line.startX,line.startY);
     ctx.lineTo(line.endX,line.endY);
   }
-
+  ctx.strokeStyle = "rgb(244, 8, 42)";
   ctx.stroke();
   ctx.closePath();
 
@@ -200,6 +213,7 @@ function draw() {
   }
 }
 function onmousedown(e) {
+  toolbar.style.bottom = "-5vh";
   if(tool == "polygon"){
 
     if(firstClick){
@@ -243,6 +257,8 @@ function onmouseup(e){
   existingRect.endy = e.clientY-10;
   mouseX = e.clientX - 10;
   mouseY = e.clientY - 10;
+  if(tool != "polygon")
+  toolbar.style.bottom = "0px";
 }
 
 function onmousemove(e) {
@@ -261,12 +277,14 @@ function onmousemove(e) {
     if(ismousedown){
       ctx.clearRect(0,0,canvas.width,canvas.height);
       ctx.beginPath();
+      ctx.strokeStyle = "rgb(244, 8, 42)";
       ctx.strokeRect(existingRect.startx,existingRect.starty,mouseX - existingRect.startx,mouseY - existingRect.starty);
     }
   }else{
     if(ismousedown){
       ctx.clearRect(0,0,canvas.width,canvas.height);
       ctx.beginPath();
+      ctx.strokeStyle = "rgb(244, 8, 42)";
       ctx.arc(existingCircle.startx + (mouseX - existingCircle.startx)/2,existingCircle.starty + (mouseY - existingCircle.starty)/2,Math.sqrt((mouseX - existingCircle.startx)**2 + (mouseY - existingCircle.starty) **2)/2,0,2*Math.PI);
       ctx.stroke();
     }
@@ -284,7 +302,7 @@ function ondblclick(){
   }
   ctx.closePath();
   ctx.stroke();
-
+  toolbar.style.bottom = "0px";
 }
 
 
@@ -294,10 +312,9 @@ polygonClip.onclick = ()=>{
   ctx.beginPath();
   existingLines = [];
   firstClick = true;
-
   tool = "polygon";
-  circleClip.style.backgroundColor = "#e9e9ed";
-  rectClip.style.backgroundColor = "#e9e9ed";
+  circleClip.style.backgroundColor = "white";
+  rectClip.style.backgroundColor = "white";
   rectClipToggle = false;
   circleClipToggle = false;
   if(polygonClipToggle){
@@ -305,6 +322,8 @@ polygonClip.onclick = ()=>{
       canvas.onmousedown = onmousedown;
       canvas.onmousemove = onmousemove;
       canvas.ondblclick = ondblclick;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
       document.body.appendChild(canvas);
       polygonClip.style.backgroundColor = "rgb(27, 242, 141)";
   }else{
@@ -313,15 +332,15 @@ polygonClip.onclick = ()=>{
     canvas.onmousemove = null;
     canvas.ondblclick = null;
     document.body.removeChild(canvas);
-    polygonClip.style.backgroundColor = "#e9e9ed";
+    polygonClip.style.backgroundColor = "white";
   }
 }
 
 rectClip.onclick = ()=>{
   rectClipToggle = !rectClipToggle;
   tool = "rect";
-  polygonClip.style.backgroundColor = "#e9e9ed";
-  circleClip.style.backgroundColor = "#e9e9ed";
+  polygonClip.style.backgroundColor = "white";
+  circleClip.style.backgroundColor = "white";
   polygonClipToggle = false;
   circleClipToggle = false;
   existingLines = [];
@@ -329,6 +348,8 @@ rectClip.onclick = ()=>{
       canvas.onmouseup = onmouseup;
       canvas.onmousedown = onmousedown;
       canvas.onmousemove = onmousemove;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
       document.body.appendChild(canvas);
       rectClip.style.backgroundColor = "rgb(27, 242, 141)";
   }else{
@@ -339,7 +360,7 @@ rectClip.onclick = ()=>{
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.beginPath();
     document.body.removeChild(canvas);
-    rectClip.style.backgroundColor = "#e9e9ed";
+    rectClip.style.backgroundColor = "white";
   }
   existingLines = [];
   isDrawing = false;
@@ -348,8 +369,8 @@ rectClip.onclick = ()=>{
 circleClip.onclick = ()=>{
   circleClipToggle = !circleClipToggle;
   tool = "circle";
-  polygonClip.style.backgroundColor = "#e9e9ed";
-  rectClip.style.backgroundColor = "#e9e9ed";
+  polygonClip.style.backgroundColor = "white";
+  rectClip.style.backgroundColor = "white";
   polygonClipToggle = false;
   rectClipToggle = false;
   existingLines = [];
@@ -357,6 +378,8 @@ circleClip.onclick = ()=>{
       canvas.onmouseup = onmouseup;
       canvas.onmousedown = onmousedown;
       canvas.onmousemove = onmousemove;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
       document.body.appendChild(canvas);
       circleClip.style.backgroundColor = "rgb(27, 242, 141)";
   }else{
@@ -367,7 +390,7 @@ circleClip.onclick = ()=>{
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.beginPath();
     document.body.removeChild(canvas);
-    rectClip.style.backgroundColor = "#e9e9ed";
+    circleClip.style.backgroundColor = "white";
   }
   existingLines = [];
   isDrawing = false;
@@ -377,9 +400,9 @@ circleClip.onclick = ()=>{
 download.onclick = ()=>{
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.beginPath();
-  polygonClip.style.backgroundColor = "#e9e9ed";
-  rectClip.style.backgroundColor = "#e9e9ed";
-  circleClip.style.backgroundColor = "#e9e9ed";
+  polygonClip.style.backgroundColor = "white";
+  rectClip.style.backgroundColor = "white";
+  circleClip.style.backgroundColor = "white";
   polygonClipToggle = false;
   rectClipToggle = false;
   circleClipToggle = false;
@@ -399,9 +422,9 @@ closeBtn.onclick = ()=>{
     polygonClipToggle = false;
     rectClipToggle = false;
     circleClipToggle = false;
-    polygonClip.style.backgroundColor = "#e9e9ed";
-    rectClip.style.backgroundColor = "#e9e9ed";
-    circleClip.style.backgroundColor = "#e9e9ed";
+    polygonClip.style.backgroundColor = "white";
+    rectClip.style.backgroundColor = "white";
+    circleClip.style.backgroundColor = "white";
       isDrawing = false;
       ismousedown = false;
 
@@ -493,14 +516,13 @@ function removeBtn(){
 
 
 function getImage(){
-    ctx.clearRect(0,0,canvas.width,canvas,height);
-    ctx.beginPath();
+
 
     cv2.width = canvas.width ;
     cv2.height = canvas.height;
     document.body.appendChild(cv2);
     ctx2.drawImage(videoElement, 0, 0, cv2.width, cv2.height);
-
+    console.log("hi")
     if(tool != "rect" && tool != "circle"){
       
       if(existingLines.length){
@@ -530,7 +552,6 @@ function getImage(){
     imageData = cv2.toDataURL('image/jpg');
     downloadLink.href = imageData;
     downloadLink.click();
-    ctx.clearRect(0,0,canvas.width,canvas.height)
     existingLines = [];
     tool = null;
 }
