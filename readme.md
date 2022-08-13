@@ -1,4 +1,4 @@
-#Take-Screenshots
+# Take-Screenshots
 ### A mozilla firefox extension to take screenshots of different shape with different tools.
 
 ---
