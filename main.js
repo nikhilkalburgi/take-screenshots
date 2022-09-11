@@ -1,3 +1,6 @@
+/* 
+Two Buttons viewFullScreen and displayScreen to initialize.
+*/
 
 var viewFullScreen = document.createElement('button');
 viewFullScreen.style.position = "fixed";
@@ -15,12 +18,6 @@ viewFullScreen.innerHTML = "View Full Screen";
 viewFullScreen.style.zIndex = "2147483646";
 viewFullScreen.style.cursor = "pointer";
 viewFullScreen.style.boxShadow = "0px 0px 10px black";
-viewFullScreen.onmousedown = ()=>{
-  viewFullScreen.style.boxShadow = "none";
-}
-viewFullScreen.onmouseup = ()=>{
-  viewFullScreen.style.boxShadow = "0px 0px 10px black";
-}
 
 var displayScreen = document.createElement('button');
 displayScreen.style.position = "fixed";
@@ -38,6 +35,13 @@ displayScreen.innerHTML = "Access Screen";
 displayScreen.style.zIndex = "2147483646";
 displayScreen.style.cursor = "pointer";
 displayScreen.style.boxShadow = "0px 0px 10px black";
+
+viewFullScreen.onmousedown = ()=>{
+  viewFullScreen.style.boxShadow = "none";
+}
+viewFullScreen.onmouseup = ()=>{
+  viewFullScreen.style.boxShadow = "0px 0px 10px black";
+}
 displayScreen.onmousedown = ()=>{
   displayScreen.style.boxShadow = "none";
 }
@@ -45,6 +49,9 @@ displayScreen.onmouseup = ()=>{
   displayScreen.style.boxShadow = "0px 0px 10px black";
 }
 
+/*
+toolbar with 5 tools
+*/
 var toolbar = document.createElement('div');
 toolbar.style.display = "flex";
 toolbar.style.position = "fixed";
@@ -61,6 +68,7 @@ toolbar.style.zIndex = "2147483647";
 toolbar.style.backgroundColor="white";
 toolbar.style.transition = "all 0.3s";
 
+// canvas on the screen
 let  canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -77,8 +85,8 @@ var mouseX = 0;
 var mouseY = 0;
 var isDrawing = false;
 var existingLines = [];
-var hasLoaded = true;
 
+// canvas for download
 var cv2 = document.createElement('canvas');
 var ctx2 = cv2.getContext('2d');
 cv2.style.position = "fixed";
@@ -86,65 +94,64 @@ cv2.style.top = "0px";
 cv2.style.left = "0px";
 cv2.style.display = "none";
 
-  let firstClick = true;
-  
-  var polygonClip = document.createElement("button");
-  polygonClip.style.border = "0.1px solid #918c8c";
-  var polygonClipToggle = false;
-  var image = new Image();
-  image.src = browser.runtime.getURL('pen.png');
-  polygonClip.appendChild(image);
-  polygonClip.style.width = "40px";
-  polygonClip.style.padding = "5px";
-  polygonClip.style.cursor = "pointer";
+let firstClick = true;
+var polygonClip = document.createElement("button");
+polygonClip.style.border = "0.1px solid #918c8c";
+var polygonClipToggle = false;
+var image = new Image();
+image.src = browser.runtime.getURL('pen.png');
+polygonClip.appendChild(image);
+polygonClip.style.width = "40px";
+polygonClip.style.padding = "5px";
+polygonClip.style.cursor = "pointer";
 
-  var rectClip = document.createElement("button");
-  rectClip.style.border = "0.1px solid #918c8c"
-  var rectClipToggle = false;
-  image = new Image();
-  image.src = browser.runtime.getURL('rect.png');
-  image.style.width = "80%";
-  image.style.paddingTop = "5px";
-  image.style.paddingLeft = "3px";
-  rectClip.appendChild(image);
-  rectClip.style.width = "40px";
-  rectClip.style.padding = "5px";
-  rectClip.style.cursor = "pointer";
+var rectClip = document.createElement("button");
+rectClip.style.border = "0.1px solid #918c8c"
+var rectClipToggle = false;
+image = new Image();
+image.src = browser.runtime.getURL('rect.png');
+image.style.width = "80%";
+image.style.paddingTop = "5px";
+image.style.paddingLeft = "3px";
+rectClip.appendChild(image);
+rectClip.style.width = "40px";
+rectClip.style.padding = "5px";
+rectClip.style.cursor = "pointer";
 
-  var circleClip = document.createElement("button");
-  circleClip.style.border = "0.1px solid #918c8c"
-  var circleClipToggle = false;
-  image = new Image();
-  image.src = browser.runtime.getURL('circle.png');
-  image.style.width = "80%";
-  image.style.paddingTop = "5px";
-  image.style.paddingLeft = "3px";
-  circleClip.appendChild(image);
-  circleClip.style.width = "40px";
-  circleClip.style.padding = "5px";
-  circleClip.style.cursor = "pointer";
+var circleClip = document.createElement("button");
+circleClip.style.border = "0.1px solid #918c8c"
+var circleClipToggle = false;
+image = new Image();
+image.src = browser.runtime.getURL('circle.png');
+image.style.width = "80%";
+image.style.paddingTop = "5px";
+image.style.paddingLeft = "3px";
+circleClip.appendChild(image);
+circleClip.style.width = "40px";
+circleClip.style.padding = "5px";
+circleClip.style.cursor = "pointer";
 
-  var download = document.createElement("button");
-  download.style.border = "0.1px solid #918c8c"
-  image = new Image();
-  image.src = browser.runtime.getURL('download.png');
-  image.style.width = "60%";
-  image.style.paddingTop = "5px";
-  download.appendChild(image);
-  download.style.width = "40px";
-  download.style.padding = "5px";
-  download.style.cursor = "pointer";
+var download = document.createElement("button");
+download.style.border = "0.1px solid #918c8c"
+image = new Image();
+image.src = browser.runtime.getURL('download.png');
+image.style.width = "60%";
+image.style.paddingTop = "5px";
+download.appendChild(image);
+download.style.width = "40px";
+download.style.padding = "5px";
+download.style.cursor = "pointer";
 
-  var closeBtn = document.createElement("button");
-  closeBtn.style.border = "0.1px solid #918c8c";
-  image = new Image();
-  image.src = browser.runtime.getURL('close.png');
-  image.style.paddingTop = "2px";
-  image.style.paddingLeft = "2px";
-  closeBtn.appendChild(image);
-  closeBtn.style.width = "40px";
-  closeBtn.style.padding = "5px";
-  closeBtn.style.cursor = "pointer";
+var closeBtn = document.createElement("button");
+closeBtn.style.border = "0.1px solid #918c8c";
+image = new Image();
+image.src = browser.runtime.getURL('close.png');
+image.style.paddingTop = "2px";
+image.style.paddingLeft = "2px";
+closeBtn.appendChild(image);
+closeBtn.style.width = "40px";
+closeBtn.style.padding = "5px";
+closeBtn.style.cursor = "pointer";
 
 var downloadLink = document.createElement('a');
 downloadLink.innerHTML = "DOWNLOAD";
@@ -156,7 +163,6 @@ var imageData;
 circleClip.style.backgroundColor = "white";
 rectClip.style.backgroundColor = "white";
 polygonClip.style.backgroundColor = "white";
-
 
 var displayMediaOptions = {
   video: {
@@ -190,7 +196,7 @@ window.onresize = ()=>{
   canvas.height = window.innerHeight;
 }
 
-
+// Draw the polygon
 function draw() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.beginPath();
@@ -202,16 +208,14 @@ function draw() {
   ctx.strokeStyle = "rgb(244, 8, 42)";
   ctx.stroke();
   ctx.closePath();
-
-  if (true) {
-    ctx.beginPath();
-    ctx.moveTo(startX,startY);
-    ctx.lineTo(mouseX,mouseY);
-    ctx.stroke();
-    ctx.closePath();
-    isDrawing = true;
-  }
+  ctx.beginPath();
+  ctx.moveTo(startX,startY);
+  ctx.lineTo(mouseX,mouseY);
+  ctx.stroke();
+  ctx.closePath();
+  isDrawing = true;
 }
+
 function onmousedown(e) {
   toolbar.style.bottom = "-5vh";
   if(tool == "polygon"){
@@ -221,7 +225,7 @@ function onmousedown(e) {
       startY = e.clientY - 10;
       firstClick = false;
     }
-    if (hasLoaded && e.button === 0) {
+    if (e.button === 0) {
   
         existingLines.push({
           startX: startX,
@@ -249,6 +253,7 @@ function onmousedown(e) {
   }
   ismousedown = true;
 }
+
 function onmouseup(e){
   ismousedown = false;
   existingCircle.endx = e.clientX-10;
@@ -266,13 +271,10 @@ function onmousemove(e) {
   mouseX = e.clientX - 10;
   mouseY = e.clientY - 10;
   if(tool == "polygon"){
-
-    if (hasLoaded) {
   
       if (isDrawing) {
         draw();
       }
-    }
   }else if(tool == "rect"){
     if(ismousedown){
       ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -291,6 +293,7 @@ function onmousemove(e) {
   }
 }
 
+// Completing the polygon
 function ondblclick(){
   isDrawing = false;
   ctx.beginPath();
@@ -304,7 +307,6 @@ function ondblclick(){
   ctx.stroke();
   toolbar.style.bottom = "0px";
 }
-
 
 polygonClip.onclick = ()=>{
   polygonClipToggle = !polygonClipToggle;
@@ -396,7 +398,6 @@ circleClip.onclick = ()=>{
   isDrawing = false;
 }
 
-
 download.onclick = ()=>{
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.beginPath();
@@ -437,6 +438,7 @@ toolbar.appendChild(circleClip);
 toolbar.appendChild(download);
 toolbar.appendChild(closeBtn);
 
+// Getting the screen access
 async function startCapture(){
   try {
     videoElement.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
@@ -454,8 +456,6 @@ async function startCapture(){
   return true;
 }
 
-
-
 if(displayScreen){
   displayScreen.addEventListener("click",()=>{
     startCapture().then(()=>{
@@ -467,14 +467,13 @@ function addBtn(){
   document.body.appendChild(displayScreen);
 }
 
-
-
 docElm.addEventListener("fullscreenchange",(listener)=>{
   if(!document.fullscreenElement){
     document.body.removeChild(toolbar);
     document.body.removeChild(canvas);
   }
 })
+
 if (viewFullScreen) {
   viewFullScreen.addEventListener("click", function() {    
       if (docElm.requestFullscreen) {
@@ -496,7 +495,6 @@ document.body.appendChild(viewFullScreen);
 document.body.removeChild(displayScreen);
 }
 
-
 function removeBtn(){
   try{
     if(Array.from(document.body.childNodes).indexOf(displayScreen))
@@ -510,8 +508,7 @@ function removeBtn(){
   }
 }
 
-
-
+// Downloading the png image
 function getImage(){
     cv2.width = canvas.width ;
     cv2.height = canvas.height;
@@ -550,7 +547,7 @@ function getImage(){
     tool = null;
 }
 
-
+// Listening for the background script
 browser.runtime.onMessage.addListener((request) => {
   if(request.dock){
     addBtn();
@@ -558,7 +555,7 @@ browser.runtime.onMessage.addListener((request) => {
     removeBtn();
   }
   
-  return Promise.resolve({docked:request.dock});
+  return Promise.resolve({dock:request.dock});
 });
 
 
