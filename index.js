@@ -15,6 +15,7 @@ function sendMessageToTabs(tabs) {
 }
 
 browser.runtime.onMessage.addListener((request,sender,response) => {
+  if(request.dock != undefined)
   dock = request.dock;
   response();
   })
@@ -27,4 +28,21 @@ browser.runtime.onMessage.addListener((request,sender,response) => {
       active: true
     }).then(sendMessageToTabs).catch(onError);
   });
+
+  browser.downloads.onChanged.addListener((dd)=>{
+    console.log(dd);
+    browser.tabs.query({
+      currentWindow: true,
+      active: true
+    }).then((tabs)=>{
+      for (let tab of tabs) {
+        browser.tabs.sendMessage(
+          tab.id,
+          {popDownload:dd.state.current}
+        ).then((response) => {
+    
+        }).catch(onError);
+      }
+    }).catch(onError);
+  })
   

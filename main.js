@@ -96,7 +96,7 @@ cv2.style.display = "none";
 
 let firstClick = true;
 var polygonClip = document.createElement("button");
-polygonClip.style.border = "0.1px solid #918c8c";
+polygonClip.style.border = "none";
 var polygonClipToggle = false;
 var image = new Image();
 image.src = browser.runtime.getURL('pen.png');
@@ -106,7 +106,7 @@ polygonClip.style.padding = "5px";
 polygonClip.style.cursor = "pointer";
 
 var rectClip = document.createElement("button");
-rectClip.style.border = "0.1px solid #918c8c"
+rectClip.style.border = "none"
 var rectClipToggle = false;
 image = new Image();
 image.src = browser.runtime.getURL('rect.png');
@@ -119,7 +119,7 @@ rectClip.style.padding = "5px";
 rectClip.style.cursor = "pointer";
 
 var circleClip = document.createElement("button");
-circleClip.style.border = "0.1px solid #918c8c"
+circleClip.style.border = "none"
 var circleClipToggle = false;
 image = new Image();
 image.src = browser.runtime.getURL('circle.png');
@@ -132,7 +132,7 @@ circleClip.style.padding = "5px";
 circleClip.style.cursor = "pointer";
 
 var download = document.createElement("button");
-download.style.border = "0.1px solid #918c8c"
+download.style.border = "none"
 image = new Image();
 image.src = browser.runtime.getURL('download.png');
 image.style.width = "60%";
@@ -143,7 +143,7 @@ download.style.padding = "5px";
 download.style.cursor = "pointer";
 
 var closeBtn = document.createElement("button");
-closeBtn.style.border = "0.1px solid #918c8c";
+closeBtn.style.border = "none";
 image = new Image();
 image.src = browser.runtime.getURL('close.png');
 image.style.paddingTop = "2px";
@@ -409,6 +409,7 @@ download.onclick = ()=>{
   circleClipToggle = false;
   isDrawing = false;
   ismousedown = false;
+  document.body.removeChild(canvas);
   getImage();
 }
 
@@ -441,13 +442,16 @@ toolbar.appendChild(closeBtn);
 // Getting the screen access
 async function startCapture(){
   try {
-    videoElement.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
-    videoElement.srcObject.getVideoTracks()[0].onended = ()=>{
-      browser.runtime.sendMessage({dock:false},()=>{
-        document.body.removeChild(viewFullScreen);
-      });
-      if(document.fullscreenElement)
-        document.exitFullscreen()
+    if(!videoElement.srcObject){
+      videoElement.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
+      videoElement.srcObject.getVideoTracks()[0].onended = ()=>{
+        browser.runtime.sendMessage({dock:false},()=>{
+          document.body.removeChild(viewFullScreen);
+        });
+        if(document.fullscreenElement)
+          document.exitFullscreen()
+      }
+
     }
   }catch(err) {
     console.error("Error" + err)
@@ -471,6 +475,8 @@ docElm.addEventListener("fullscreenchange",(listener)=>{
   if(!document.fullscreenElement){
     document.body.removeChild(toolbar);
     document.body.removeChild(canvas);
+    browser.runtime.sendMessage({dock:false},()=>{
+    });
   }
 })
 
@@ -478,8 +484,8 @@ if (viewFullScreen) {
   viewFullScreen.addEventListener("click", function() {    
       if (docElm.requestFullscreen) {
         docElm.requestFullscreen().then(()=>{
-          document.body.appendChild(toolbar);
           document.body.removeChild(viewFullScreen);
+          document.body.appendChild(toolbar);
         })
       } else if (docElm.msRequestFullscreen) {
         docElm.msRequestFullscreen();
@@ -491,8 +497,8 @@ if (viewFullScreen) {
   })  
 }
 function addNextBtn(){
-document.body.appendChild(viewFullScreen);
-document.body.removeChild(displayScreen);
+  document.body.removeChild(displayScreen);
+  document.body.appendChild(viewFullScreen);
 }
 
 function removeBtn(){
@@ -545,10 +551,39 @@ function getImage(){
     downloadLink.click();
     existingLines = [];
     tool = null;
+    document.body.removeChild(cv2);
+}
+
+function popDialog(){
+  let dialog = document.createElement("div");
+  dialog.innerHTML = "Downloaded Successfully!";
+  dialog.style.backgroundColor = "rgb(27, 242, 141)";
+  dialog.style.padding = "20px";
+  dialog.style.position = "absolute";
+  dialog.style.top = "50px";
+  dialog.style.right = "50px";
+  dialog.style.fontSize = "3vh";
+  dialog.style.transition = "all 0.4s";
+  dialog.style.opacity = "0";
+  document.body.appendChild(dialog);
+  setTimeout(()=>{
+    dialog.style.opacity = "1";
+  },200)
+  setTimeout(()=>{
+    dialog.style.opacity = "0";
+    document.body.removeChild(dialog);
+  },2000)
+  setTimeout(()=>{
+    document.body.removeChild(dialog);
+  },2500)
 }
 
 // Listening for the background script
 browser.runtime.onMessage.addListener((request) => {
+  if(request.popDownload == "complete"){
+    popDialog();
+    return;
+  }
   if(request.dock){
     addBtn();
   }else{

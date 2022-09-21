@@ -1,6 +1,6 @@
 {
     "name":"Take-Screenshot",
-    "version":"1.0.2",
+    "version":"1.0.3",
     "description":"This Extension helps you to take screen shots",
     "browser_action":{
         "browser_style": true,
