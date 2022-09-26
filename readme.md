@@ -3,9 +3,8 @@
 
 ---
 
-### Screenshots of the extension.
+### Screenshot of the extension.
 ![alt](screenshot1.png)
-![alt](screenshot2.png)
 
 This add-on helps the users to take screen shots.
 It has three tools of taking screen shots , which are :
