@@ -211,8 +211,8 @@ function onmousedown(e) {
   if(tool == "polygon"){
 
     if(firstClick){
-      startX = e.clientX - 10;
-      startY = e.clientY - 10;
+      startX = e.clientX;
+      startY = e.clientY;
       firstClick = false;
     }
     if (e.button === 0) {
@@ -224,8 +224,8 @@ function onmousedown(e) {
           endY: mouseY
         });
   
-      startX = e.clientX - 10;
-      startY = e.clientY - 10;
+      startX = e.clientX;
+      startY = e.clientY;
   
       draw();
   
@@ -233,33 +233,33 @@ function onmousedown(e) {
   }else if(tool == "rect"){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.beginPath();
-    existingRect.startx = e.clientX - 10;
-    existingRect.starty = e.clientY - 10;
+    existingRect.startx = e.clientX;
+    existingRect.starty = e.clientY;
   }else{
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.beginPath();
-    existingCircle.startx = e.clientX - 10;
-    existingCircle.starty = e.clientY - 10;
+    existingCircle.startx = e.clientX;
+    existingCircle.starty = e.clientY;
   }
   ismousedown = true;
 }
 
 function onmouseup(e){
   ismousedown = false;
-  existingCircle.endx = e.clientX-10;
-  existingCircle.endy = e.clientY-10;
-  existingRect.endx = e.clientX-10;
-  existingRect.endy = e.clientY-10;
-  mouseX = e.clientX - 10;
-  mouseY = e.clientY - 10;
+  existingCircle.endx = e.clientX;
+  existingCircle.endy = e.clientY;
+  existingRect.endx = e.clientX;
+  existingRect.endy = e.clientY;
+  mouseX = e.clientX;
+  mouseY = e.clientY;
   if(tool != "polygon")
   toolbar.style.bottom = "0px";
 }
 
 function onmousemove(e) {
 
-  mouseX = e.clientX - 10;
-  mouseY = e.clientY - 10;
+  mouseX = e.clientX;
+  mouseY = e.clientY;
   if(tool == "polygon"){
   
       if (isDrawing) {
@@ -442,6 +442,7 @@ async function startCapture(){
           document.body.removeChild(downloadLink);
           document.head.removeChild(style);
           document.body.removeChild(videoElement);
+          videoElement.srcObject = null;
         });
         if(document.fullscreenElement)
           document.exitFullscreen()
@@ -463,6 +464,10 @@ if(displayScreen){
   })
 }
 function addBtn(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia){
+    alert("Media Unsupported");
+    return;
+  }
   document.body.appendChild(displayScreen);
 }
 
